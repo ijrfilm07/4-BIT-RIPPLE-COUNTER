@@ -23,18 +23,86 @@ In timing diagram Q0 is changing as soon as the negative edge of clock pulse is 
 ![image](https://github.com/naavaneetha/4-BIT-RIPPLE-COUNTER/assets/154305477/85e1958a-2fc1-49bb-9a9f-d58ccbf3663c)
 
 **Procedure**
+Connect the circuit as per the 4-bit ripple counter diagram.
 
-/* write all the steps invloved */
+Connect the clock pulse to the first JK flip-flop (FF0).
+
+Connect Q output of FF0 to the clock input of FF1, and so on.
+
+Set J = K = 1 for all flip-flops to enable toggling.
+
+Apply power supply (5V DC) to the circuit.
+
+Observe the output on LEDs or logic indicators for Q0, Q1, Q2, Q3.
+
+Count increases in binary form (0000 → 0001 → 0010 … → 1111).
 
 **PROGRAM**
-
 /* Program for 4 Bit Ripple Counter and verify its truth table in quartus using Verilog programming.
 
- Developed by: RegisterNumber:
-*/
+Developed by:Rheya e RegisterNumber:25012705 */
+
+module BRC (
+
+input clk, // Clock input
+
+input reset, // Reset input (active high)
+
+output [3:0] q // 4-bit output
+
+);
+
+// Internal signals for flip-flops
+
+reg [3:0] q_int;
+
+// Assign internal register to output
+
+assign q = q_int;
+
+always @(posedge clk or posedge reset) begin
+
+if (reset)
+
+q_int[0] <= 1'b0; // Reset the first bit to 0
+
+else
+
+q_int[0] <= ~q_int[0]; // Toggle the first bit on clock edge
+ end
+
+// Generate the other flip-flops based on the output of the previous one
+
+genvar i;
+
+generate
+
+for (i = 1; i < 4; i = i + 1) begin : ripple
+
+always @(posedge q_int[i-1] or posedge reset) begin
+
+if (reset)
+
+q_int[i] <= 1'b0; // Reset the bit to 0
+
+else
+
+q_int[i] <= ~q_int[i]; // Toggle the bit on clock edge of previous stage
+
+end
+
+end
+
+endgenerate
+
+endmodule
+
 
 **RTL LOGIC FOR 4 Bit Ripple Counter**
+![EX 12 RTL image ](https://github.com/user-attachments/assets/14d0585f-549d-48f4-933c-402d0ce962d8)
 
 **TIMING DIGRAMS FOR 4 Bit Ripple Counter**
+![EX 12 waveform timing diagram](https://github.com/user-attachments/assets/4f7ce993-cac8-41b5-8d66-59b61490c9b6)
 
 **RESULTS**
+the program successfully implemented a 4 Bit Ripple Counter using verilog and validating their functionality using their functional tables.
